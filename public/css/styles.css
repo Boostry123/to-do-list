@@ -29,6 +29,10 @@ h1 {
   align-items: center;
   border-bottom: 1px solid #F1F1F1;
 }
+.itemContent{
+  overflow-wrap: break-word;
+  width: 90%;
+}
 
 .item:last-child {
   border-bottom: 0;
@@ -50,13 +54,32 @@ p {
   font-weight: 200;
   color: #00204a;
 }
+hr{
+ border: dotted white 5px ;
+ border-top: 0;
+ width: 40%;
+}
 
 form.item {
   text-align: center;
   margin-left: 20px;
 }
 
-button {
+.navBar{
+  text-align: center;
+  margin: 50px;
+}
+.redirectButton{
+  border-radius: 5px;
+  border: 0;
+  background-color: #A683E3;
+  margin: 0 15px
+}
+.navAddName{
+  margin: 50px;
+}
+
+.addButton {
   min-height: 50px;
   width: 50px;
   border-radius: 50%;
@@ -73,15 +96,33 @@ input[type="text"] {
   height: 60px;
   top: 10px;
   border: none;
-  background: transparent;
+  background: white;
   font-size: 20px;
   font-weight: 200;
-  width: 313px;
+  width:313px;
+  border-radius: 5px;
 }
 
 input[type="text"]:focus {
   outline: none;
   box-shadow: inset 0 -3px 0 0 #A683E3;
+}
+.removeButton{
+  text-align: center;
+  margin: 50px;
+}
+.removeButton button{
+  background-color: rgba(255, 0, 0, 0.521);
+  width: 400px;
+  height: 60px;
+  font-size: 20px;
+  font-weight: 200;
+  border-radius: 5px;
+  border: 0;
+}
+.removeButton button:hover{
+  transition: 0.3s;
+  background-color: rgba(255, 0, 0, 0.842);
 }
 
 ::placeholder {

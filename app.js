@@ -22,17 +22,17 @@ const itemsSchema = {
 
 const Item = mongoose.model("Item", itemsSchema);
 
-const item1 = new Item({
-  name: "welcome to your todoList"
-});
-const item2 = new Item({
-  name: "Hit the + button to add a new item"
-});
-const item3 = new Item({
-  name: "<-- Hit this to delete an item"
-});
+// const item1 = new Item({
+//   name: "welcome to your todoList"
+// });
+// const item2 = new Item({
+//   name: "Hit the + button to add a new item"
+// });
+// const item3 = new Item({
+//   name: "<-- Hit this to delete an item"
+// });
 
-const defaultItems = [item1, item2, item3];
+// const defaultItems = [item1, item2, item3];
 
 const listSchema = {
   name: String,
@@ -40,7 +40,7 @@ const listSchema = {
 };
 
 const List = mongoose.model("List", listSchema)
-
+const listNames = [] // a list of the newly created lists names
 
 
 
@@ -48,42 +48,66 @@ const List = mongoose.model("List", listSchema)
 app.get("/", function (req, res) {
 
   Item.find({}, (err, foundItems) => {
-    if (foundItems.length === 0) {
-      Item.insertMany(defaultItems, (err) => {
-        if (err) {
-          console.log(err)
-        } else {
-          console.log("all items have been added to the collections")
+    // if (foundItems.length === 0) {
+    //   Item.insertMany(defaultItems, (err) => {
+    //     if (err) {
+    //       console.log(err)
+    //     } else {
+    //       console.log("all items have been added to the collections")
+    //     }
+    //   });
+    //   res.redirect("/")
+    // } else {
+      List.find({}, (err, resault) => {
+        if (!err) {
+          resault.forEach((object) => {
+            if (!listNames.includes(object.name) && object.name !== "Favicon.ico") {
+              listNames.push(object.name)
+              
+            }
+          })
         }
-      });
-      res.redirect("/")
-    } else {
-      res.render("list", { listTitle: "Today", newListItems: foundItems })
-    }
-
+        res.render("list", { listTitle: "Main page", newListItems: foundItems, listIn: listNames })
+      })
+      
+      
+    // }
+    
+    
   });
+  
+
+
 });
 
 app.get("/:paramName", (req, res) => {
   const paramName = _.capitalize(req.params.paramName);
+
+
+  List.find({}, (err, resault) => {
+    if (!err) {
+      resault.forEach((object) => {
+        if (!listNames.includes(object.name) && object.name !== "Favicon.ico") {
+          listNames.push(object.name)
+        }
+      })
+    }
+  })
 
   List.findOne({ name: paramName }, (err, resault) => {
     if (!err) {
       if (!resault) {
         const list = new List({
           name: paramName,
-          items: defaultItems
+          // items: defaultItems
         });
         list.save();
-        res.redirect("/"+paramName)
+        res.redirect("/" + paramName)
       } else {
-        res.render("list", { listTitle: resault.name, newListItems: resault.items })
+        res.render("list", { listTitle: resault.name, newListItems: resault.items, listIn: listNames })
       }
     }
   });
-
-
-  
 });
 
 
@@ -96,14 +120,14 @@ app.post("/", function (req, res) {
     name: itemName
   });
 
-  if(listName==="Today"){
+  if (listName === "Today") {
     newItem.save()
     res.redirect("/")
-  }else{
-    List.findOne({name: listName}, (err, foundList)=>{
+  } else {
+    List.findOne({ name: listName }, (err, foundList) => {
       foundList.items.push(newItem)
       foundList.save();
-      res.redirect("/"+ listName);
+      res.redirect("/" + listName);
     })
   }
 
@@ -113,7 +137,7 @@ app.post("/delete", (req, res) => {
   const checkedItemId = req.body.checkbox;
   const listName = req.body.listName;
 
-  if (listName === "today"){
+  if (listName === "Today") {
     Item.findByIdAndRemove(checkedItemId, (err) => {
       if (err) {
         console.log(err)
@@ -122,15 +146,44 @@ app.post("/delete", (req, res) => {
         res.redirect("/")
       }
     })
-  }else{
-    List.findOneAndUpdate({name : listName},{$pull:{items: {_id:checkedItemId}}},(err,foundList)=>{
-      if(!err){
-        res.redirect("/"+ listName);
+  } else {
+    List.findOneAndUpdate({ name: listName }, { $pull: { items: { _id: checkedItemId } } }, (err, foundList) => {
+      if (!err) {
+        res.redirect("/" + listName);
       }
     })
   }
 
 })
+
+app.post("/redirect", (req, res) => {
+  const redirected = req.body.redirect;
+
+  res.redirect("/" + redirected)
+})
+
+app.post("/addName", (req, res) => {
+  const listName = req.body.addName
+  console.log("new list have been made name: "+listName)
+  res.redirect("/" + listName)
+  
+})
+
+app.post("/removeList", (req, res) => {
+  const listName = req.body.removeList;
+
+List.findOneAndDelete({name: listName},(err)=>{
+  if(err){
+    console.log(err)
+  }else{
+    const indexOfListName = listNames.indexOf(listName)
+    listNames.splice(indexOfListName)
+    console.log("removed "+listName)
+    res.redirect("/")
+  }
+})
+})
+
 
 
 app.get("/about", function (req, res) {
@@ -138,7 +191,7 @@ app.get("/about", function (req, res) {
 });
 
 let port = process.env.PORT;
-if (port == null || port == ""){
+if (port == null || port == "") {
   port = 3000;
 }
 
