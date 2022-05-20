@@ -1,6 +1,6 @@
 html {
   background-color: #E4E9FD;
-  background-image: -webkit-linear-gradient(65deg, #A683E3 50%, #E4E9FD 50%);
+  background-image: -webkit-linear-gradient(65deg, #7180AC 10%, #CCD1E1 50%);
   min-height: 1000px;
   font-family: 'helvetica neue';
 }
@@ -24,7 +24,7 @@ h3,h2{
 }
 
 #heading {
-  background-color: #A683E3;
+  background-color: #7180AC;
   text-align: center;
 }
 
@@ -45,7 +45,7 @@ h3,h2{
 
 input:checked+p {
   text-decoration: line-through;
-  text-decoration-color: #A683E3;
+  text-decoration-color: #7180AC;
 }
 
 input[type="checkbox"] {
@@ -84,7 +84,7 @@ form.item {
 .redirectButton{
   border-radius: 5px;
   border: 0;
-  background-color: #A577E1;
+  background-color: #7180AC;
   margin: 10px 15px
 }
 
@@ -98,7 +98,7 @@ form.item {
   width: 50px;
   border-radius: 50%;
   border-color: transparent;
-  background-color: #A683E3;
+  background-color: #7180AC;
   color: #fff;
   font-size: 30px;
   padding-bottom: 6px;
@@ -119,7 +119,7 @@ input[type="text"] {
 
 input[type="text"]:focus {
   outline: none;
-  box-shadow: inset 0 -3px 0 0 #A683E3;
+  box-shadow: inset 0 -3px 0 0 #7180AC;
 }
 
 .removeButton{
