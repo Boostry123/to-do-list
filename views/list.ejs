@@ -1,6 +1,7 @@
 <%- include("header") -%>
 
   <div class="navBar">
+    <p>max of 15 lists</p>
     <% listIn.forEach((item)=>{ %>
       <form action="/redirect" method="post">
         <button type="submit" class="redirectButton" name="redirect" value="<%= item %>">

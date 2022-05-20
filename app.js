@@ -48,16 +48,7 @@ const listNames = [] // a list of the newly created lists names
 app.get("/", function (req, res) {
 
   Item.find({}, (err, foundItems) => {
-    // if (foundItems.length === 0) {
-    //   Item.insertMany(defaultItems, (err) => {
-    //     if (err) {
-    //       console.log(err)
-    //     } else {
-    //       console.log("all items have been added to the collections")
-    //     }
-    //   });
-    //   res.redirect("/")
-    // } else {
+
       List.find({}, (err, resault) => {
         if (!err) {
           resault.forEach((object) => {
@@ -67,12 +58,12 @@ app.get("/", function (req, res) {
             }
           })
         }
-        res.render("list", { listTitle: "Main page", newListItems: foundItems, listIn: listNames })
+        if (!listNames.includes("Main page")) {
+          listNames.push("Main page")
+        }
+        res.render("main", { listTitle: "Main page", newListItems: foundItems, listIn: listNames })
       })
       
-      
-    // }
-    
     
   });
   
@@ -92,6 +83,7 @@ app.get("/:paramName", (req, res) => {
         }
       })
     }
+    
   })
 
   List.findOne({ name: paramName }, (err, resault) => {
@@ -120,16 +112,12 @@ app.post("/", function (req, res) {
     name: itemName
   });
 
-  if (listName === "Today") {
-    newItem.save()
-    res.redirect("/")
-  } else {
+  
     List.findOne({ name: listName }, (err, foundList) => {
       foundList.items.push(newItem)
       foundList.save();
       res.redirect("/" + listName);
     })
-  }
 
 });
 
@@ -158,14 +146,22 @@ app.post("/delete", (req, res) => {
 
 app.post("/redirect", (req, res) => {
   const redirected = req.body.redirect;
-
+if (redirected !== "Main page"){
   res.redirect("/" + redirected)
+}else{
+  res.redirect("/")
+}
 })
 
 app.post("/addName", (req, res) => {
   const listName = req.body.addName
-  console.log("new list have been made name: "+listName)
-  res.redirect("/" + listName)
+  if (listNames.length < 15){
+    console.log("new list have been made name: "+listName)
+    res.redirect("/" + listName)
+  }else{
+    console.log("can't create new list , list is full")
+  }
+ 
   
 })
 
@@ -196,5 +192,5 @@ if (port == null || port == "") {
 }
 
 app.listen(port, function () {
-  console.log("Server started on port 3000");
+  console.log("Server started success");
 });
