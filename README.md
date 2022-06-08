@@ -2,7 +2,7 @@
 
 To do list:
 
-language used: Javascript
+language used: Javascript , Ejs , CSS
 runs using : Node.js
 database : MongoDB with mongoose and express
 
